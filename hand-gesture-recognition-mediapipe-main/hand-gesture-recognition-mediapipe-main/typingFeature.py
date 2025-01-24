@@ -18,12 +18,14 @@ import nltk
 #nltk.download('words')
 possible_words = words.words()
 
+
+#use try except for unit testing
 def get_suggestions(label, word_list, max_suggestions=3):
     return difflib.get_close_matches(label.lower(),word_list, n=max_suggestions)
 # Variables to track gestures and timing
 current_label = None
 label_start_time = None
-required_hold_duration = 5  # Seconds
+required_hold_duration = 2  # Seconds
 
 # Load labels
 def get_args():

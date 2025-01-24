@@ -15,7 +15,7 @@ from model import KeyPointClassifier
 from model import PointHistoryClassifier
 
 extended_mode_active = False
-
+extended_ed_mode_active = False
 def get_args():
 
     parser = argparse.ArgumentParser()
@@ -205,7 +205,7 @@ def main():
 
 
 def select_mode(key, mode):
-    global extended_mode_active, typing_enabled, typing_mode_active
+    global extended_mode_active, typing_enabled, typing_mode_active, extended_ed_mode_active
     number = -1
 
     #toggle extended mode
@@ -217,10 +217,15 @@ def select_mode(key, mode):
         extended_mode_active = not extended_mode_active
         print(extended_mode_active)
 
+    if key == 45: #-
+        extended_ed_mode_active = not extended_ed_mode_active
+        print(extended_ed_mode_active)
+
+
     if key == 110:  # n
         mode = 0
     elif key == 107:  # k
-        mode = 1cd
+        mode = 1
     elif key == 104:  # h
         mode = 2
 
@@ -237,6 +242,8 @@ def select_mode(key, mode):
     if 48 <= key <= 57:  # 0 ~ 9
         if extended_mode_active:
             number = 10 + (key - 48) # 10 -19
+        elif extended_ed_mode_active:
+            number = 20 + (key - 48) # 20 -29
         else:
             number = key - 48
 
@@ -332,7 +339,7 @@ def logging_csv(number, mode, landmark_list, point_history_list):
         pass
     # change the upper limit for the range if extending label number
 
-    if mode == 1 and (0 <= number <= 19):
+    if mode == 1 and (0 <= number <= 25):
         csv_path = 'model/keypoint_classifier/keypoint.csv'
         with open(csv_path, 'a', newline="") as f:
             writer = csv.writer(f)
@@ -553,12 +560,12 @@ def draw_info_text(image, brect, handedness, hand_sign_text,
     cv.putText(image, info_text, (brect[0] + 5, brect[1] - 4),
                cv.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1, cv.LINE_AA)
 
-    if finger_gesture_text != "":
-        cv.putText(image, "Finger Gesture:" + finger_gesture_text, (10, 60),
-                   cv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 0), 4, cv.LINE_AA)
-        cv.putText(image, "Finger Gesture:" + finger_gesture_text, (10, 60),
-                   cv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 2,
-                   cv.LINE_AA)
+#    if finger_gesture_text != "":
+ #       cv.putText(image, "Gesture:" + finger_gesture_text, (10, 60),
+  #                 cv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 0), 4, cv.LINE_AA)
+   #     cv.putText(image, "Gesture:" + finger_gesture_text, (10, 60),
+    #               cv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 2,
+     #              cv.LINE_AA)
 
     return image
 
